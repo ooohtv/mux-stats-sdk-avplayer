@@ -194,7 +194,6 @@
 					};
 					F444D4371DDB8EBF00FE804F = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = CX6AHWLHM6;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -495,7 +494,7 @@
 			baseConfigurationReference = 9C185072A37B30692DDCB8D3 /* Pods-DemoApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = CX6AHWLHM6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -503,7 +502,7 @@
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mux.stats.ios.DemoApp22;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mux.stats.ios.DemoApp23;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -513,7 +512,7 @@
 			baseConfigurationReference = FFEE778F3200980783CB61AD /* Pods-DemoApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GFDDVAVUVC;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -521,7 +520,7 @@
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mux.stats.ios.DemoApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mux.stats.ios.nidhik.DemoApp22;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

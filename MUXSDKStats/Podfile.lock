@@ -1,16 +1,22 @@
 PODS:
-  - Mux-Stats-Core (3.2.0)
+  - Mux-Stats-Core (3.2.1)
 
 DEPENDENCIES:
-  - Mux-Stats-Core (~> 3.2)
+  - Mux-Stats-Core (from `https://github.com/muxinc/stats-sdk-objc.git`, branch `nidhik/remove-uikit`)
 
-SPEC REPOS:
-  trunk:
-    - Mux-Stats-Core
+EXTERNAL SOURCES:
+  Mux-Stats-Core:
+    :branch: nidhik/remove-uikit
+    :git: https://github.com/muxinc/stats-sdk-objc.git
+
+CHECKOUT OPTIONS:
+  Mux-Stats-Core:
+    :commit: 8279375ce91a0aa8e007da9d26cb09af743ebd1c
+    :git: https://github.com/muxinc/stats-sdk-objc.git
 
 SPEC CHECKSUMS:
-  Mux-Stats-Core: 83cb64ed6b77b1885e61beeffac2995abf984d3f
+  Mux-Stats-Core: d704ed64f28256ed833a749c907d7d44a248b4f0
 
-PODFILE CHECKSUM: 03bb2b034ee12140a31c01cabb14b36a41d1fd56
+PODFILE CHECKSUM: 294f97f8481dd98c2d9559106f00051f7ccddc86
 
 COCOAPODS: 1.10.1
