@@ -4,10 +4,11 @@
 @import Mux_Stats_Google_IMA;
 
 static NSString *DEMO_PLAYER_NAME = @"demoplayer";
+bool actualVideoChange = false;
 NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpostpod&cmsid=496&vid=short_onecue&correlator=";
 
 @interface ViewController () {
-    AVPlayer *_avplayer;
+    AVQueuePlayer *_avplayer;
     AVPlayerViewController *_avplayerController;
     NSTimer *_videoChangeTimer;
 
@@ -26,12 +27,12 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
     [super viewDidLoad];
     _avplayerController = [AVPlayerViewController new];
     AVPlayer *player;
-    if ([self isTestingAds]) {
-       player = [self testImaSDK];
-    } else {
-        player = [self testAVPlayer];
-    }
-//    player = [self testAVQueuePlayer];
+//    if ([self isTestingAds]) {
+//       player = [self testImaSDK];
+//    } else {
+//        player = [self testAVPlayer];
+//    }
+    player = [self testAVQueuePlayer];
     [self setupAVPlayerViewController: player];
 }
 
@@ -138,9 +139,17 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
 }
 
 - (AVPlayer *)testAVQueuePlayer {
-    AVPlayerItem *item1 = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:@"https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"]];
+//    AVPlayerItem *item1 = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:@"https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"]];
     AVPlayerItem *item2 = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:@"http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"]];
-    AVQueuePlayer *player = [[AVQueuePlayer alloc] initWithItems:@[item1, item2]];
+    AVQueuePlayer *player = [[AVQueuePlayer alloc] initWithItems:@[item2]];
+    
+    // After 20 seconds, we'll change the video.
+    _videoChangeTimer = [NSTimer scheduledTimerWithTimeInterval:20.0
+                                                         target:self
+                                                       selector:@selector(changeVideo:)
+                                                       userInfo:nil
+                                                        repeats:NO];
+    
     return player;
 }
 
@@ -175,8 +184,8 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
     }
     MUXSDKCustomerPlayerData *playerData = [[MUXSDKCustomerPlayerData alloc] initWithPropertyKey:envKey];
     MUXSDKCustomerVideoData *videoData = [MUXSDKCustomerVideoData new];
-    videoData.videoTitle = @"Big Buck Bunny";
-    videoData.videoId = @"bigbuckbunny";
+    videoData.videoTitle = @"Apple Keynote (first video)";
+    videoData.videoId = @"video1";
     videoData.videoSeries = @"animation";
     MUXSDKCustomerViewData *viewData= [[MUXSDKCustomerViewData alloc] init];
     viewData.viewSessionId = @"some session id";
@@ -185,6 +194,7 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
                                                      playerData:playerData
                                                       videoData:videoData
                                                        viewData: viewData];
+    [MUXSDKStats setAutomaticVideoChange:DEMO_PLAYER_NAME enabled:false];
     _imaListener = [[MuxImaListener alloc] initWithPlayerBinding:_playerBinding];
     [_avplayer play];
     [self addChildViewController:_avplayerController];
@@ -194,15 +204,37 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
 }
 
 - (void)changeVideo:(NSTimer *)timer {
-    MUXSDKCustomerVideoData *videoData = [MUXSDKCustomerVideoData new];
-    videoData.videoTitle = @"Apple Keynote";
-    videoData.videoId = @"applekeynote2010";
-    [MUXSDKStats videoChangeForPlayer:DEMO_PLAYER_NAME
-                        withVideoData:videoData];
-    NSURL* videoURL = [NSURL URLWithString:@"http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"];
-    AVPlayerItem *keynote = [AVPlayerItem playerItemWithURL:videoURL];
-    [_avplayer replaceCurrentItemWithPlayerItem:keynote];
-    [_avplayer play];
+    NSLog(@">>> Timer fired!");
+    if (actualVideoChange) {
+        // we want to change video and start a new view
+        NSLog(@">>> Tell Mux to change the video and start a new view");
+        MUXSDKCustomerVideoData *videoData = [MUXSDKCustomerVideoData new];
+        videoData.videoTitle = @"Sintel (second video) - this should be a new view";
+        videoData.videoId = @"video-2";
+        [MUXSDKStats videoChangeForPlayer:DEMO_PLAYER_NAME
+                            withVideoData:videoData];
+        NSURL* videoURL = [NSURL URLWithString:@"https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"];
+        AVPlayerItem *keynote = [AVPlayerItem playerItemWithURL:videoURL];
+        [_avplayer replaceCurrentItemWithPlayerItem:keynote];
+        [_avplayer play];
+    } else {
+        // we're updating the source without a video change being enabled automatically
+        NSLog(@">>> Set the Source URL again, but no new view should be started setAutomaticVideoChange enabled is false");
+        [_avplayer pause];
+        NSURL* videoURL = [NSURL URLWithString:@"http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"];
+        AVPlayerItem *keynote = [AVPlayerItem playerItemWithURL:videoURL];
+        [_avplayer removeAllItems];
+        [_avplayer replaceCurrentItemWithPlayerItem:keynote];
+        [_avplayer play];
+        // set the timer again, and next time we'll do a real video change
+        actualVideoChange = true;
+        // After 20 seconds, we'll change the video for real.
+        _videoChangeTimer = [NSTimer scheduledTimerWithTimeInterval:20.0
+                                                             target:self
+                                                           selector:@selector(changeVideo:)
+                                                           userInfo:nil
+                                                            repeats:NO];
+    }
 }
 
 - (void)changeProgram:(NSTimer *)timer {
@@ -220,3 +252,4 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
 
 
 @end
+
