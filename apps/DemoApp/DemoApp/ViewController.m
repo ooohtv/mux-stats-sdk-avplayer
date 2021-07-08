@@ -149,7 +149,7 @@ NSString *const kAdTagURLStringPreRollMidRollPostRoll = @"https://pubads.g.doubl
     AVPlayer *player = [AVPlayer playerWithURL:videoURL];
     
     // After 20 seconds, we'll change the video.
-    _videoChangeTimer = [NSTimer scheduledTimerWithTimeInterval:20.0
+    _videoChangeTimer = [NSTimer scheduledTimerWithTimeInterval:10.0
                                                          target:self
                                                        selector:@selector(changeVideo:)
                                                        userInfo:nil
