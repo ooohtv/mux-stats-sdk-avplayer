@@ -34,7 +34,7 @@ NSString *const kAdTagURLStringPostRoll = @"https://pubads.g.doubleclick.net/gam
     [app setLaunchEnvironment:@{@"ENV_KEY": @"tr4q3qahs0gflm8b1c75h49ln"}];
     [app launch];
     XCTestExpectation *exp = [[XCTestExpectation alloc] initWithDescription:@"Just wait for 20 seconds."];
-    XCTWaiterResult result = [XCTWaiter waitForExpectations:@[exp] timeout:20.0];
+    XCTWaiterResult result = [XCTWaiter waitForExpectations:@[exp] timeout:60.0];
     if(result != XCTWaiterResultTimedOut) {
         XCTFail(@"Interrupted while playing video.");
     }
