@@ -1119,3 +1119,29 @@ NSString * RemoveObserverExceptionName = @"NSRangeException";
 }
 
 @end
+
+@implementation MUXSDKAVPlayerBinding
+{
+    CGRect _videoBounds;
+    CGRect _viewBounds;
+}
+
+- (id)initWithName:(NSString *)name software:(NSString *)software videoBounds:(CGRect)videoR viewBounds:(CGRect)viewR {
+    self = [super initWithName:name andSoftware:software];
+    if (self) {
+        _viewBounds = viewR;
+        _videoBounds = videoR;
+    }
+    return (self);
+}
+
+- (CGRect)getVideoBounds {
+    return _videoBounds;
+}
+
+- (CGRect)getViewBounds {
+    return _viewBounds;
+}
+
+
+@end

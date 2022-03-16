@@ -49,6 +49,22 @@ FOUNDATION_EXPORT
 /*!
  @method      monitorAVPlayerViewController:withPlayerName:customerData:
  @abstract    Starts to monitor a given AVPlayerViewController.
+ @param       player An AVPlayer to monitor
+ @param       name A name for this instance of the player
+ @param       videoR Bounding rectangle of the video
+ @param       viewR Rectangle the video is being displayed within
+ @param       customerData A MUXSDKCustomerData object with player, video, and view metadata
+ @return      an instance of MUXSDKAVPlayerLayerBinding or null
+ @discussion  Use this method to start a Mux player monitor on the given AVPlayerViewController. The player must have a name which is globally unique. The config provided should match the specifications in the Mux docs at https://docs.mux.com
+ */
++ (MUXSDKPlayerBinding *_Nullable)monitorAVPlayer:(nonnull AVPlayer *)player
+                                   withPlayerName:(nonnull NSString *)name
+                                      videoBounds:(CGRect)videoR
+                                       viewBounds:(CGRect)viewR
+                                    customerData:(nonnull MUXSDKCustomerData *)customerData;
+/*!
+ @method      monitorAVPlayerViewController:withPlayerName:customerData:
+ @abstract    Starts to monitor a given AVPlayerViewController.
  @param       player An AVPlayerViewController to monitor
  @param       name A name for this instance of the player
  @param       customerData A MUXSDKCustomerData object with player, video, and view metadata
