@@ -401,7 +401,11 @@ NSString * RemoveObserverExceptionName = @"NSRangeException";
     [asset loadValuesAsynchronouslyForKeys:@[@"metadata"] completionHandler:^{
         NSMutableDictionary *sessionData = [[NSMutableDictionary alloc] init];
         for (AVMetadataItem *item in asset.metadata) {
-            NSString *keyString = (NSString *)[item key];
+            id<NSObject,NSCopying> key = item.key;
+            
+            if (![key isKindOfClass:NSString.class]) continue;
+            NSString *keyString = (NSString *)key;
+            
             if ([keyString hasPrefix:MUXSessionDataPrefix]) {
                 NSString *itemKey = [keyString substringFromIndex:[MUXSessionDataPrefix length]];
                 [sessionData setObject:[item value] forKey:itemKey];
@@ -1117,5 +1121,31 @@ NSString * RemoveObserverExceptionName = @"NSRangeException";
 - (CGRect)getViewBounds {
     return [_view bounds];
 }
+
+@end
+
+@implementation MUXSDKAVPlayerBinding
+{
+    CGRect _videoBounds;
+    CGRect _viewBounds;
+}
+
+- (id)initWithName:(NSString *)name software:(NSString *)software videoBounds:(CGRect)videoR viewBounds:(CGRect)viewR {
+    self = [super initWithName:name andSoftware:software];
+    if (self) {
+        _viewBounds = viewR;
+        _videoBounds = videoR;
+    }
+    return (self);
+}
+
+- (CGRect)getVideoBounds {
+    return _videoBounds;
+}
+
+- (CGRect)getViewBounds {
+    return _viewBounds;
+}
+
 
 @end
