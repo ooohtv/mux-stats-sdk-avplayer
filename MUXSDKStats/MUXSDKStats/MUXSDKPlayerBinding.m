@@ -401,7 +401,11 @@ NSString * RemoveObserverExceptionName = @"NSRangeException";
     [asset loadValuesAsynchronouslyForKeys:@[@"metadata"] completionHandler:^{
         NSMutableDictionary *sessionData = [[NSMutableDictionary alloc] init];
         for (AVMetadataItem *item in asset.metadata) {
-            NSString *keyString = (NSString *)[item key];
+            id<NSObject,NSCopying> key = item.key;
+            
+            if (![key isKindOfClass:NSString.class]) continue;
+            NSString *keyString = (NSString *)key;
+            
             if ([keyString hasPrefix:MUXSessionDataPrefix]) {
                 NSString *itemKey = [keyString substringFromIndex:[MUXSessionDataPrefix length]];
                 [sessionData setObject:[item value] forKey:itemKey];
